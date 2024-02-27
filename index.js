@@ -52,9 +52,9 @@ app.get('/submit1', (req, res) => {
         }
     })
     for (let item in orderDict){
-        if (orderDict[item] !== 0){
+        let quantity = orderDict[item];
+        if (quantity !== '' && quantity !== 0){
             let total = orderDict[item] * 12.99;
-            let quantity = orderDict[item];
             client.query(`
             INSERT INTO Orders (customer_id, item_name, quantity, tot_price)
             SELECT customer_id, $2, $3, $4
@@ -68,13 +68,26 @@ app.get('/submit1', (req, res) => {
 });
 
 app.get('/submit2', (req, res) => {
-    let Item = req.query.newItem;
-    let Value = req.query.newValue;
+    let item = req.query.newItem;
+    let value = req.query.newValue;
 
-    console.log(Item, Value);
-     // Assuming you want to send a simple success response
-     res.status(200).json({ message: "Order submitted successfully." });
+    // Upsert (insert or update) the item in the Inventory table
+    client.query(`
+        INSERT INTO Inventory (item_name, item_value)
+        VALUES ($1, $2)
+        ON CONFLICT (item_name) DO UPDATE
+        SET item_value = EXCLUDED.item_value;
+    `, [item, value])
+    .then(() => {
+        console.log("Item inserted/updated successfully");
+        res.status(200).json({ message: "Item inserted/updated successfully." });
+    })
+    .catch(err => {
+        console.error("Error inserting/updating item", err);
+        res.status(500).json({ error: "Failed to insert/update item." });
+    });
 });
+
 
 
 app.get('/submit3', (req, res) => {
@@ -84,7 +97,21 @@ app.get('/submit3', (req, res) => {
     let guests = req.query.guests;
     let phone = req.query.phone;
 
-    console.log(custName, date, time, guests, phone);
+    client.query(`INSERT INTO customers (customer_name, phone_number) VALUES ($1, $2);`,
+    [custName, phone],(err1, ret1)=>{
+        if(err1){
+            res.json({error: err1.message});
+        }
+    })
+
+    client.query(`
+            INSERT INTO reservations (customer_id, reservation_date, reservation_time, number_of_people)
+            SELECT customer_id, $2, $3, $4
+            FROM Customers
+            WHERE phone_number = $1;
+        `, [phone, date, time, guests])
+            .then(() => console.log("Order inserted successfully"))
+            .catch(err => console.error("Error inserting order", err))
 
     // Assuming you want to send a simple success response
     res.status(200).json({ message: "Reservation submitted successfully." });
