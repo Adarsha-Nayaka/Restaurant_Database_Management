@@ -1,27 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Management System</title>
-    <style> 
-        /* Simple layout for demonstration */
-        body { display: flex; }
-        nav { width: 200px; background-color: lightgray; }
-        main { flex: 1; padding: 20px; } 
+    <style>
+        /* General styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #212121;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #ff7f50; /* Orange border bottom */
+        }
+
+        header .restaurant-title {
+            text-decoration: none;
+            font-size: 32px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        header .restaurant-title:hover {
+            color: #ff7f50; /* Orange color on hover */
+        }
+
+        /* Navigation styles */
+        nav {
+            width: 200px;
+            background-color: #f3f3f3;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+
+        nav h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin-bottom: 10px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #555;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #ddd;
+        }
+
+        /* Main content styles */
+        main {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease; /* Add transition for box-shadow */
+        }
+
+        /* Add some animation to the content */
+        #content {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <h1>Hotel Name</h1> 
+    <header>
+        <a href="#" class="restaurant-title">Restaurant Management System</a>
+    </header>
+
     <nav>
-        <h2>Sections</h2> 
+        <h2>Sections</h2>
         <ul>
             <li><a href="#" id="order-management">Order Management</a></li>
             <li><a href="#" id="inventory-management">Inventory Management</a></li>
             <li><a href="#" id="table-reservations">Table Reservations</a></li>
+            <li><a href="#" id="staff-details">Staff Details</a></li>
         </ul>
     </nav>
+
     <main id="content">
+        <!-- Content will be dynamically loaded here -->
     </main>
 
-    <script src="script.js"></script> 
+    <script src="script.js"></script>
 </body>
 </html>

@@ -6,9 +6,17 @@ import cors from "cors";
 import pkg from 'pg';
 const { Client } = pkg;
 
+const ___dirname = dirname(fileURLToPath(import.meta.url));
+
+
 const app = express();
 const port = 3000;
 app.use(cors());
+app.use(express.json());
+
+// app.get('/', (req, res)=>{
+//     res.sendFile(___dirname + "/public/index.html");
+// });
 
 const client = new Client({
     host: "localhost",
@@ -22,7 +30,7 @@ client.connect()
     .then(() => console.log("Connected successfully"))
     .catch(err => console.error("Connection error", err));
 
-const __dirname = dirname(fileURLToPath(import.meta.url)); 
+// const __dirname = dirname(fileURLToPath(import.meta.url)); 
 
 app.get('/submit1', (req, res) => {
 
@@ -104,6 +112,7 @@ app.get('/submit3', (req, res) => {
         }
     })
 
+    
     client.query(`
             INSERT INTO reservations (customer_id, reservation_date, reservation_time, number_of_people)
             SELECT customer_id, $2, $3, $4
@@ -118,6 +127,40 @@ app.get('/submit3', (req, res) => {
 });
 
 
+
+app.get('/submit4', (req, res) => {
+    let staffName = req.query.staffName;
+    let designation = req.query.designation;
+    let contact = req.query.contact;
+
+    // Assuming you have already initialized your database connection
+    client.query(`INSERT INTO staff (staff_name, designation, contact) VALUES ($1, $2, $3);`,
+    [staffName, designation, contact], (err, result) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+        } else {
+            res.status(200).json({ success: true });
+        }
+    });
+});
+
+app.get('/retrieve', async (req, res, next) => {
+    try {
+        const customers = await client.query('SELECT * FROM Customers');
+        const orders = await client.query('SELECT * FROM Orders');
+        const staff = await client.query('SELECT * FROM Staff');
+        const reservations = await client.query('SELECT * FROM reservations');
+
+        const cust = customers.rows;
+        const ord = orders.rows;
+        const stf = staff.rows;
+        const resv = reservations.rows;
+
+        res.json({ customers: cust, orders: ord, staff: stf, reservations: resv });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 app.listen(port, ()=>{
     console.log(`Server started at port ${port}`);
