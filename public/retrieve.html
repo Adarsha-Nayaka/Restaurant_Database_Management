@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Database Tables</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #output {
+            max-width: 800px;
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Initially hide the output */
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #007bff;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Restaurant Database Tables</h1>
+
+    <!-- Buttons to toggle display of data sections -->
+    <div>
+        <button id="btnCustomers">Customers</button>
+        <button id="btnOrders">Orders</button>
+        <button id="btnStaff">Staff</button>
+        <button id="btnReservations">Reservations</button>
+    </div>
+
+    <div id="output"></div>
+
+    <script>
+        var data = {};
+        var customers = {};
+        var orders = {};
+        var staff = {};
+        var reservations = {};
+
+        
+        fetch('http://localhost:3000/retrieve')
+            .then(response => response.json())
+            .then(retrievedData => {
+                
+                data = retrievedData;
+                customers = data['customers'];
+                orders = data['orders'];
+                staff = data['staff'];
+                reservations = data['reservations'];
+
+            })
+            .catch(error => console.error('Error:', error));
+
+        // Function to display data on the webpage based on the selected section
+        function displayData(section) {
+            var outputDiv = document.getElementById('output');
+            var html = '';
+
+            // Display the selected section
+            switch (section) {
+                case 'customers':
+                    html += '<h2>Customers</h2>';
+                    html += '<table>';
+                    html += '<tr><th>Customer ID</th><th>Customer Name</th><th>Phone Number</th></tr>';
+                    Object.keys(customers).forEach(customerId => {
+                        var customer = customers[customerId];
+                        html += '<tr><td>' + customerId + '</td><td>' + customer.customer_name + '</td><td>' + customer.phone_number + '</td></tr>';
+                    });
+                    html += '</table>';
+                    break;
+                case 'orders':
+                    html += '<h2>Orders</h2>';
+                    html += '<table>';
+                    html += '<tr><th>Order ID</th><th>Order Date</th><th>Order Amount</th></tr>';
+                    Object.keys(orders).forEach(orderId => {
+                        var order = orders[orderId];
+                        html += '<tr><td>' + orderId + '</td><td>' + order.order_date + '</td><td>' + order.order_amount + '</td></tr>';
+                    });
+                    html += '</table>';
+                    break;
+                case 'staff':
+                    html += '<h2>Staff</h2>';
+                    html += '<table>';
+                    html += '<tr><th>Staff ID</th><th>Name</th><th>Designation</th><th>Contact</th></tr>';
+                    Object.keys(staff).forEach(staffId => {
+                        var staffMember = staff[staffId];
+                        html += '<tr><td>' + staffId + '</td><td>' + staffMember.name + '</td><td>' + staffMember.designation + '</td><td>' + staffMember.contact + '</td></tr>';
+                    });
+                    html += '</table>';
+                    break;
+                case 'reservations':
+                    html += '<h2>Reservations</h2>';
+                    html += '<table>';
+                    html += '<tr><th>Reservation ID</th><th>Reservation Date And Time</th><th>Number of People</th></tr>';
+                    Object.keys(reservations).forEach(reservationId => {
+                        var reservation = reservations[reservationId];
+                        html += '<tr><td>' + reservationId + '</td><td>' + reservation.reservation_date + '</td><td>' + reservation.number_of_people + '</td></tr>';
+                    });
+                    html += '</table>';
+                    break;
+                default:
+                    break;
+            }
+
+            outputDiv.innerHTML = html;
+            outputDiv.style.display = 'block'; // Show the output after setting its content
+        }
+
+        // Add event listeners to the buttons to toggle display of data sections
+        document.getElementById('btnCustomers').addEventListener('click', function() {
+            displayData('customers');
+        });
+        document.getElementById('btnOrders').addEventListener('click', function() {
+            displayData('orders');
+        });
+        document.getElementById('btnStaff').addEventListener('click', function() {
+            displayData('staff');
+        });
+        document.getElementById('btnReservations').addEventListener('click', function() {
+            displayData('reservations');
+        });
+    </script>
+</body>
+</html>

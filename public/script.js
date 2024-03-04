@@ -29,14 +29,6 @@ function loadSection(sectionId) {
             contentArea.innerText = 'Section not found';
     }
 }
-//Getting data from server
-fetch('http://localhost:3000/retrieve')
-    .then(response => response.json())
-    .then(data => {
-console.log('Retrieved Data:', data);
-})
-    .catch(error => console.error('Error:', error));
-
 
 
 const Submit1 = async (orders, customername, phone_no) => {
