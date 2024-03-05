@@ -21,8 +21,8 @@ app.use(express.json());
 const client = new Client({
     host: "localhost",
     user: "postgres",
-    port: 5433,
-    password: "2003",
+    port: 5432,
+    password: "password",
     database: "restaurant"
 })
   
@@ -155,6 +155,7 @@ app.get('/retrieve', async (req, res, next) => {
         const ord = orders.rows;
         const stf = staff.rows;
         const resv = reservations.rows;
+        console.log(stf);
 
         res.json({ customers: cust, orders: ord, staff: stf, reservations: resv });
     } catch (error) {

@@ -99,9 +99,14 @@
                 orders = data['orders'];
                 staff = data['staff'];
                 reservations = data['reservations'];
+                        
+                console.log(staff);
+                console.log(orders);
+                console.log(reservations);
 
             })
             .catch(error => console.error('Error:', error));
+        
 
         // Function to display data on the webpage based on the selected section
         function displayData(section) {
@@ -123,10 +128,10 @@
                 case 'orders':
                     html += '<h2>Orders</h2>';
                     html += '<table>';
-                    html += '<tr><th>Order ID</th><th>Order Date</th><th>Order Amount</th></tr>';
+                    html += '<tr><th>Order ID</th><th>Customer ID</th><th>Order Date</th><th>Item Name</th><th>Quantity</th><th>Total Amount</th></tr>';
                     Object.keys(orders).forEach(orderId => {
                         var order = orders[orderId];
-                        html += '<tr><td>' + orderId + '</td><td>' + order.order_date + '</td><td>' + order.order_amount + '</td></tr>';
+                        html += '<tr><td>' + orderId + '</td><td>' + order.customer_id + '</td><td>' + order.order_date + '</td><td>' + order.item_name + '</td><td>' + order.quantity + '</td><td>' + order.tot_price + '</td></tr>';
                     });
                     html += '</table>';
                     break;
@@ -136,17 +141,17 @@
                     html += '<tr><th>Staff ID</th><th>Name</th><th>Designation</th><th>Contact</th></tr>';
                     Object.keys(staff).forEach(staffId => {
                         var staffMember = staff[staffId];
-                        html += '<tr><td>' + staffId + '</td><td>' + staffMember.name + '</td><td>' + staffMember.designation + '</td><td>' + staffMember.contact + '</td></tr>';
+                        html += '<tr><td>' + staffId + '</td><td>' + staffMember.   staff_name + '</td><td>' + staffMember.designation + '</td><td>' + staffMember.contact + '</td></tr>';
                     });
                     html += '</table>';
                     break;
                 case 'reservations':
                     html += '<h2>Reservations</h2>';
                     html += '<table>';
-                    html += '<tr><th>Reservation ID</th><th>Reservation Date And Time</th><th>Number of People</th></tr>';
+                    html += '<tr><th>Reservation ID</th><th>Customer Id</th><th>Reservation Date And Time</th><th>Number of People</th></tr>';
                     Object.keys(reservations).forEach(reservationId => {
                         var reservation = reservations[reservationId];
-                        html += '<tr><td>' + reservationId + '</td><td>' + reservation.reservation_date + '</td><td>' + reservation.number_of_people + '</td></tr>';
+                        html += '<tr><td>' + reservationId + '</td><td>' + reservation.customer_id + '</td><td>' + reservation.reservation_date + '</td><td>' + reservation.number_of_people + '</td></tr>';
                     });
                     html += '</table>';
                     break;
